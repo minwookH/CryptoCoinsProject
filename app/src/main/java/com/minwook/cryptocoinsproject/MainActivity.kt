@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.tabs.TabLayout
 import com.minwook.cryptocoinsproject.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,9 +29,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        coinListAdapter = CoinListAdapter()
-        binding.rvList.adapter = coinListAdapter
-        binding.rvList.layoutManager = LinearLayoutManager(this)
+        binding.apply {
+            tlTab.addTab(tlTab.newTab().setText("BTC"))
+            tlTab.addTab(tlTab.newTab().setText("즐겨찾기"))
+            tlTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    tab?.let {
+                        Log.d("coin", "initView onTabSelected : ${it.position}")
+
+                        when (it.position) {
+                            0 -> {}
+                            else -> {}
+                        }
+                    }
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                }
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                }
+
+            })
+
+            coinListAdapter = CoinListAdapter()
+            rvList.adapter = coinListAdapter
+            rvList.layoutManager = LinearLayoutManager(this@MainActivity)
+        }
     }
 
     private fun initObserve() {

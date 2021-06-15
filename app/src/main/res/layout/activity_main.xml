@@ -8,10 +8,12 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-        <TableLayout
+        <com.google.android.material.tabs.TabLayout
             android:id="@+id/tl_tab"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
