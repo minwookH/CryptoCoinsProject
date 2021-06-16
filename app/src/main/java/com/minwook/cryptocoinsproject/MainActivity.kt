@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -99,11 +100,15 @@ class MainActivity : AppCompatActivity() {
                     SortStatus.NONE, SortStatus.ASCENDING -> {
                         coinListAdapter.addTickerList(coinList.sortedByDescending { it.symbol })
                         tvCoinNameTitle.text = "${tvCoinNameTitle.text.removeSuffix("(오름)")}(내림)"
+                        removeSortText(tvPresentPriceTitle)
+                        removeSortText(tvChangeRateTitle)
                         SortStatus.DESCENDING
                     }
                     else -> {
                         coinListAdapter.addTickerList(coinList.sortedBy { it.symbol })
                         tvCoinNameTitle.text = "${tvCoinNameTitle.text.removeSuffix("(내림)")}(오름)"
+                        removeSortText(tvPresentPriceTitle)
+                        removeSortText(tvChangeRateTitle)
                         SortStatus.ASCENDING
                     }
                 }
@@ -116,11 +121,15 @@ class MainActivity : AppCompatActivity() {
                     SortStatus.NONE, SortStatus.ASCENDING -> {
                         coinListAdapter.addTickerList(coinList.sortedByDescending { it.lastPrice })
                         tvPresentPriceTitle.text = "${tvPresentPriceTitle.text.removeSuffix("(오름)")}(내림)"
+                        removeSortText(tvCoinNameTitle)
+                        removeSortText(tvChangeRateTitle)
                         SortStatus.DESCENDING
                     }
                     else -> {
                         coinListAdapter.addTickerList(coinList.sortedBy { it.symbol })
                         tvPresentPriceTitle.text = "${tvPresentPriceTitle.text.removeSuffix("(내림)")}(오름)"
+                        removeSortText(tvCoinNameTitle)
+                        removeSortText(tvChangeRateTitle)
                         SortStatus.ASCENDING
                     }
                 }
@@ -133,11 +142,15 @@ class MainActivity : AppCompatActivity() {
                     SortStatus.NONE, SortStatus.ASCENDING -> {
                         coinListAdapter.addTickerList(coinList.sortedByDescending { it.priceChangePercent })
                         tvChangeRateTitle.text = "${tvChangeRateTitle.text.removeSuffix("(오름)")}(내림)"
+                        removeSortText(tvCoinNameTitle)
+                        removeSortText(tvPresentPriceTitle)
                         SortStatus.DESCENDING
                     }
                     else -> {
                         coinListAdapter.addTickerList(coinList.sortedBy { it.symbol })
                         tvChangeRateTitle.text = "${tvChangeRateTitle.text.removeSuffix("(내림)")}(오름)"
+                        removeSortText(tvCoinNameTitle)
+                        removeSortText(tvPresentPriceTitle)
                         SortStatus.ASCENDING
                     }
                 }
@@ -202,5 +215,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         coinListAdapter.updateList(tempBookmarkList)
+    }
+
+    private fun removeSortText(view: TextView) {
+        view.text = "${view.text.toString().replace("(오름)", "")}".replace("(내림)", "")
     }
 }
