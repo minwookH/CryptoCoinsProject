@@ -34,6 +34,10 @@ class MainViewModel @Inject constructor(
     val bitCoinTicker: LiveData<SocketTicker>
         get() = _bitCoinTicker
 
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String>
+        get() = _error
+
     private val compositeDisposable = CompositeDisposable()
 
     fun loadCoinTickerList() {
@@ -64,6 +68,7 @@ class MainViewModel @Inject constructor(
 
                 override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                     Log.e("coin", "onFailure : ${t.localizedMessage}")
+                    _error.postValue(t.localizedMessage)
                     super.onFailure(webSocket, t, response)
                 }
 
