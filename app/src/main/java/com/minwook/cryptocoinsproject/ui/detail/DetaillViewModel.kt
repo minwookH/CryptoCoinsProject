@@ -1,4 +1,4 @@
-package com.minwook.cryptocoinsproject.ui
+package com.minwook.cryptocoinsproject.ui.detail
 
 import android.util.Log
 import androidx.lifecycle.LiveData

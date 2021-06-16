@@ -66,8 +66,8 @@ data class SocketTicker(
         get() {
             return when {
                 priceChangePercent.toDouble() > 0 -> R.color.red
-                priceChangePercent.toDouble() == 0.0 -> R.color.black
-                else -> R.color.blue
+                priceChangePercent.toDouble() < 0 -> R.color.blue
+                else -> R.color.black
             }
         }
 }

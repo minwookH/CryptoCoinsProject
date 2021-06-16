@@ -1,4 +1,4 @@
-package com.minwook.cryptocoinsproject.ui
+package com.minwook.cryptocoinsproject.ui.detail
 
 import android.os.Bundle
 import android.util.Log

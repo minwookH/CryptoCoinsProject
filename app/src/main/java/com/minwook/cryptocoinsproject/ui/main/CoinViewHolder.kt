@@ -1,4 +1,4 @@
-package com.minwook.cryptocoinsproject
+package com.minwook.cryptocoinsproject.ui.main
 
 import androidx.recyclerview.widget.RecyclerView
 import com.minwook.cryptocoinsproject.data.Ticker
