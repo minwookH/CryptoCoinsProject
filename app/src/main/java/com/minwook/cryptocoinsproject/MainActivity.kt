@@ -57,13 +57,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun initView() {
         binding.apply {
+            // 탭 설정
             tlTab.addTab(tlTab.newTab().setText("BTC"))
             tlTab.addTab(tlTab.newTab().setText("즐겨찾기"))
             tlTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     tab?.let {
-                        Log.d("coin", "initView onTabSelected : ${it.position}")
-
                         when (it.position) {
                             0 -> {
                                 coinListAdapter.clear()
@@ -83,9 +82,9 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
+            // 리스트 설정
             coinListAdapter = CoinListAdapter().apply {
                 onClickContents = { coin ->
-                    Log.d("coin", "CoinListAdapter onClickContents : $coin")
                     goDetailActivity(coin)
                 }
             }
@@ -159,6 +158,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initObserve() {
+        // 코인 리스트 데이터
         mainViewModel.coinTickers.observe(this, Observer {
             coinList.clear()
             coinList.addAll(it)
@@ -167,16 +167,19 @@ class MainActivity : AppCompatActivity() {
             binding.clMain.visibility = View.VISIBLE
         })
 
+        // 실시간 비트코인 데이터
         mainViewModel.bitCoinTicker.observe(this, Observer {
             Log.d("coin", "bitCoinTicker : ${it.lastPrice}\n${it.percent}")
             binding.tvBitcoinPrice.text = "${it.lastPrice}\n${it.percent}"
             binding.tvBitcoinPrice.setTextColor(it.color)
         })
 
+        // 에러
         mainViewModel.error.observe(this, {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         })
 
+        // 즐겨찾기
         bookmarkViewModel.getBookmarkList().observe(this, {
             Log.d("coin", "--  --  MainActivity getBookmarkList : ${it}")
             bookmarkList.clear()

@@ -1,7 +1,6 @@
 package com.minwook.cryptocoinsproject.ui.detail
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.minwook.cryptocoinsproject.data.Ticker
@@ -42,7 +41,6 @@ class DetailActivity : AppCompatActivity() {
             coin = extraCoin
             swBookmark.setOnCheckedChangeListener { buttonView, isChecked ->
                 coin?.let {
-                    Log.d("coin", "initView swBookmark : $isChecked")
                     if (isChecked) {
                         bookmarkViewModel.insertBookmark(CoinEntity(it.symbol, true))
                     } else {
@@ -55,9 +53,9 @@ class DetailActivity : AppCompatActivity() {
 
     private fun initObserve() {
         extraCoin?.let {
+            // 즐겨찾기 데이터
             bookmarkViewModel.getBookmark(it.symbol).observe(this, { coin ->
                 coin?.let {
-                    Log.d("coin", "initObserve coin : $coin")
                     binding.swBookmark.isChecked = it.isBookmark
                 }
             })
