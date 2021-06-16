@@ -1,8 +1,9 @@
-package com.minwook.cryptocoinsproject
+package com.minwook.cryptocoinsproject.ui.main
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.minwook.cryptocoinsproject.data.Ticker
 import com.minwook.cryptocoinsproject.databinding.ListItemCoinBinding
@@ -36,8 +37,42 @@ class CoinListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         notifyDataSetChanged()
     }
 
+    fun addTicker(data: Ticker) {
+        Log.d("coin", "CoinListAdapter addTicker : ${data}")
+        this.list.add(data)
+    }
+
+    fun updateList(updateList: ArrayList<Ticker>) {
+        val calculateDiff = DiffUtil.calculateDiff(CoinDiffCallback(list, updateList))
+
+        list.clear()
+        list.addAll(updateList)
+
+        calculateDiff.dispatchUpdatesTo(this)
+    }
+
+    fun getCoinList(): ArrayList<Ticker> = list
+
     fun clear() {
         list.clear()
         notifyDataSetChanged()
+    }
+}
+
+class CoinDiffCallback(private val oldList: ArrayList<Ticker>, private val newList: ArrayList<Ticker>) : DiffUtil.Callback() {
+    override fun getOldListSize(): Int = oldList.size
+
+    override fun getNewListSize(): Int = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].symbol == newList[newItemPosition].symbol
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        return oldList[oldItemPosition].lastPrice == newList[newItemPosition].lastPrice
+    }
+
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+        return super.getChangePayload(oldItemPosition, newItemPosition)
     }
 }

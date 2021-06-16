@@ -12,8 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.minwook.cryptocoinsproject.data.Ticker
 import com.minwook.cryptocoinsproject.databinding.ActivityMainBinding
-import com.minwook.cryptocoinsproject.ui.BookmarkViewModel
-import com.minwook.cryptocoinsproject.ui.DetailActivity
+import com.minwook.cryptocoinsproject.db.CoinEntity
+import com.minwook.cryptocoinsproject.ui.detail.BookmarkViewModel
+import com.minwook.cryptocoinsproject.ui.detail.DetailActivity
+import com.minwook.cryptocoinsproject.ui.main.CoinListAdapter
+import com.minwook.cryptocoinsproject.ui.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,8 +24,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var coinListAdapter: CoinListAdapter
+
     private val mainViewModel by viewModels<MainViewModel>()
     private val bookmarkViewModel by viewModels<BookmarkViewModel>()
+
+    private var coinList = arrayListOf<Ticker>()
+    private var bookmarkList = arrayListOf<CoinEntity>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         initObserve()
         mainViewModel.loadCoinTickerList()
         mainViewModel.loadBitcoinData()
+        bookmarkViewModel.getBookmarkList()
     }
 
     private fun initView() {
@@ -47,8 +55,11 @@ class MainActivity : AppCompatActivity() {
 
                         when (it.position) {
                             0 -> {
+                                coinListAdapter.clear()
+                                coinListAdapter.addTickerList(coinList)
                             }
                             else -> {
+                                bookmarkListSync()
                             }
                         }
                     }
@@ -59,7 +70,6 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onTabReselected(tab: TabLayout.Tab?) {
                 }
-
             })
 
             coinListAdapter = CoinListAdapter().apply {
@@ -75,6 +85,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun initObserve() {
         mainViewModel.coinTickers.observe(this, Observer {
+            coinList.clear()
+            coinList.addAll(it)
             coinListAdapter.addTickerList(it)
             binding.tvSplash.visibility = View.GONE
             binding.clMain.visibility = View.VISIBLE
@@ -91,6 +103,15 @@ class MainActivity : AppCompatActivity() {
 
         bookmarkViewModel.getBookmarkList().observe(this, {
             Log.d("coin", "--  --  MainActivity getBookmarkList : ${it}")
+            bookmarkList.clear()
+
+            if (!it.isNullOrEmpty()) {
+                bookmarkList.addAll(it)
+            }
+
+            if (binding.tlTab.selectedTabPosition == 1) {
+                bookmarkListSync()
+            }
         })
     }
 
@@ -104,5 +125,19 @@ class MainActivity : AppCompatActivity() {
             putExtra(DetailActivity.EXTRA_COIN, coin)
         }
         startActivity(intent)
+    }
+
+    private fun bookmarkListSync() {
+        val tempBookmarkList = arrayListOf<Ticker>()
+
+        bookmarkList.forEach {
+            coinList.find { coin ->
+                coin.symbol == it.symbol
+            }?.let {
+                tempBookmarkList.add(it)
+            }
+        }
+
+        coinListAdapter.updateList(tempBookmarkList)
     }
 }
