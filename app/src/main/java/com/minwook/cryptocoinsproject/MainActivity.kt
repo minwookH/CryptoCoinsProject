@@ -1,9 +1,9 @@
 package com.minwook.cryptocoinsproject
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         initView()
         initObserve()
         mainViewModel.loadCoinTickerList()
+        mainViewModel.loadBitcoinData()
     }
 
     private fun initView() {
@@ -38,8 +39,10 @@ class MainActivity : AppCompatActivity() {
                         Log.d("coin", "initView onTabSelected : ${it.position}")
 
                         when (it.position) {
-                            0 -> {}
-                            else -> {}
+                            0 -> {
+                            }
+                            else -> {
+                            }
                         }
                     }
                 }
@@ -62,6 +65,12 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.coinTickers.observe(this, Observer {
             Log.d("coin", "initObserve coinTickers : ${it.size}")
             coinListAdapter.addTickerList(it)
+        })
+
+        mainViewModel.bitCoinTicker.observe(this, Observer {
+            Log.d("coin", "initObserve bitCoinTicker : ${it}")
+            binding.tvBitcoinPrice.text = "${it.lastPrice}\n${it.percent}"
+            binding.tvBitcoinPrice.setTextColor(it.color)
         })
     }
 
