@@ -3,7 +3,6 @@ package com.minwook.cryptocoinsproject.di
 import android.app.Application
 import com.minwook.cryptocoinsproject.constant.Constants
 import com.minwook.cryptocoinsproject.network.ServerAPI
-import com.minwook.cryptocoinsproject.network.SocketAPI
 import com.tinder.scarlet.Scarlet
 import com.tinder.scarlet.lifecycle.android.AndroidLifecycle
 import com.tinder.scarlet.messageadapter.gson.GsonMessageAdapter
@@ -64,10 +63,5 @@ object NetworkModule {
             .addStreamAdapterFactory(RxJava2StreamAdapterFactory())
             .lifecycle(lifecycle)
             .build()
-    }
-
-    @Provides
-    fun provideSocketAPI(scarlet: Scarlet): SocketAPI {
-        return scarlet.create()
     }
 }
