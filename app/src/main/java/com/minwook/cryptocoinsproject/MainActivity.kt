@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.tabs.TabLayout
 import com.minwook.cryptocoinsproject.data.Ticker
 import com.minwook.cryptocoinsproject.databinding.ActivityMainBinding
@@ -22,6 +23,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    enum class SortStatus {
+        ASCENDING, // 오름차순
+        DESCENDING, // 내림차순
+        NONE
+    }
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var coinListAdapter: CoinListAdapter
 
@@ -30,6 +37,9 @@ class MainActivity : AppCompatActivity() {
 
     private var coinList = arrayListOf<Ticker>()
     private var bookmarkList = arrayListOf<CoinEntity>()
+    private var coinNameSortStatus = SortStatus.NONE
+    private var coinPriceSortStatus = SortStatus.NONE
+    private var coinPersentSortStatus = SortStatus.NONE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +90,58 @@ class MainActivity : AppCompatActivity() {
             }
             rvList.adapter = coinListAdapter
             rvList.layoutManager = LinearLayoutManager(this@MainActivity)
+            (rvList.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+
+            // 이름 정렬
+            tvCoinNameTitle.setOnClickListener {
+                coinListAdapter.clear()
+                coinNameSortStatus = when (coinNameSortStatus) {
+                    SortStatus.NONE, SortStatus.ASCENDING -> {
+                        coinListAdapter.addTickerList(coinList.sortedByDescending { it.symbol })
+                        tvCoinNameTitle.text = "${tvCoinNameTitle.text.removeSuffix("(오름)")}(내림)"
+                        SortStatus.DESCENDING
+                    }
+                    else -> {
+                        coinListAdapter.addTickerList(coinList.sortedBy { it.symbol })
+                        tvCoinNameTitle.text = "${tvCoinNameTitle.text.removeSuffix("(내림)")}(오름)"
+                        SortStatus.ASCENDING
+                    }
+                }
+            }
+
+            // 가격 정렬
+            tvPresentPriceTitle.setOnClickListener {
+                coinListAdapter.clear()
+                coinPriceSortStatus = when (coinPriceSortStatus) {
+                    SortStatus.NONE, SortStatus.ASCENDING -> {
+                        coinListAdapter.addTickerList(coinList.sortedByDescending { it.lastPrice })
+                        tvPresentPriceTitle.text = "${tvPresentPriceTitle.text.removeSuffix("(오름)")}(내림)"
+                        SortStatus.DESCENDING
+                    }
+                    else -> {
+                        coinListAdapter.addTickerList(coinList.sortedBy { it.symbol })
+                        tvPresentPriceTitle.text = "${tvPresentPriceTitle.text.removeSuffix("(내림)")}(오름)"
+                        SortStatus.ASCENDING
+                    }
+                }
+            }
+
+            // 변동률 정렬
+            tvChangeRateTitle.setOnClickListener {
+                coinListAdapter.clear()
+                coinPersentSortStatus = when (coinPersentSortStatus) {
+                    SortStatus.NONE, SortStatus.ASCENDING -> {
+                        coinListAdapter.addTickerList(coinList.sortedByDescending { it.priceChangePercent })
+                        tvChangeRateTitle.text = "${tvChangeRateTitle.text.removeSuffix("(오름)")}(내림)"
+                        SortStatus.DESCENDING
+                    }
+                    else -> {
+                        coinListAdapter.addTickerList(coinList.sortedBy { it.symbol })
+                        tvChangeRateTitle.text = "${tvChangeRateTitle.text.removeSuffix("(내림)")}(오름)"
+                        SortStatus.ASCENDING
+                    }
+                }
+            }
         }
     }
 
@@ -93,6 +155,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         mainViewModel.bitCoinTicker.observe(this, Observer {
+            Log.d("coin", "bitCoinTicker : ${it.lastPrice}\n${it.percent}")
             binding.tvBitcoinPrice.text = "${it.lastPrice}\n${it.percent}"
             binding.tvBitcoinPrice.setTextColor(it.color)
         })

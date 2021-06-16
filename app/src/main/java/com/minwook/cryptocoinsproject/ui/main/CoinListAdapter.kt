@@ -42,7 +42,7 @@ class CoinListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         this.list.add(data)
     }
 
-    fun updateList(updateList: ArrayList<Ticker>) {
+    fun updateList(updateList: List<Ticker>) {
         val calculateDiff = DiffUtil.calculateDiff(CoinDiffCallback(list, updateList))
 
         list.clear()
@@ -59,7 +59,7 @@ class CoinListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 }
 
-class CoinDiffCallback(private val oldList: ArrayList<Ticker>, private val newList: ArrayList<Ticker>) : DiffUtil.Callback() {
+class CoinDiffCallback(private val oldList: List<Ticker>, private val newList: List<Ticker>) : DiffUtil.Callback() {
     override fun getOldListSize(): Int = oldList.size
 
     override fun getNewListSize(): Int = newList.size
