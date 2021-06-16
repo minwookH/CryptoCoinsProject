@@ -1,8 +1,11 @@
 package com.minwook.cryptocoinsproject.data
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.minwook.cryptocoinsproject.R
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Ticker(
     var symbol: String,
     var priceChange: String,
@@ -13,7 +16,7 @@ data class Ticker(
     var highPrice: String,
     var lowPrice: String,
     var closeTime: String,
-) {
+) : Parcelable {
 
     val baseAsset: String
         get() = symbol.removeSuffix("BTC")

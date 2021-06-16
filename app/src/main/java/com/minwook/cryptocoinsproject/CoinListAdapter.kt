@@ -11,9 +11,13 @@ class CoinListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var list: ArrayList<Ticker> = arrayListOf()
 
+    var onClickContents: ((Ticker) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val bind = ListItemCoinBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CoinViewHolder(bind)
+        return CoinViewHolder(bind).apply {
+            onClick = { coin -> onClickContents?.invoke(coin) }
+        }
     }
 
     override fun getItemCount(): Int = list.size

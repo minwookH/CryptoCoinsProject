@@ -3,8 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="ticker"
+            type="com.minwook.cryptocoinsproject.data.Ticker" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_coin_content"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
@@ -67,10 +74,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <data>
-
-        <variable
-            name="ticker"
-            type="com.minwook.cryptocoinsproject.data.Ticker" />
-    </data>
 </layout>
